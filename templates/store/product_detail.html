@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} — AURA{% endblock %}
+{% block meta_description %}{{ product.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  
+  <!-- Breadcrumb Navigation -->
+  <nav class="flex items-center space-x-2 text-xs text-neutral-400 mb-8" aria-label="Breadcrumb">
+    <a href="{% url 'store:home' %}" class="hover:text-black transition-colors">Home</a>
+    <span>/</span>
+    <a href="{{ product.category.get_absolute_url }}" class="hover:text-black transition-colors">{{ product.category.name }}</a>
+    <span>/</span>
+    <span class="text-neutral-900 font-semibold">{{ product.name }}</span>
+  </nav>
+
+  <!-- Product Showcase Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-16 border-b border-neutral-200">
+    
+    <!-- Left Column: High-Res Image Showcase -->
+    <div class="lg:col-span-7 flex flex-col gap-4">
+      <div class="w-full bg-white rounded-3xl border border-neutral-200/80 p-8 sm:p-14 flex items-center justify-center min-h-[420px] sm:min-h-[520px] shadow-sm relative group overflow-hidden">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="max-h-[440px] max-w-full object-contain group-hover:scale-105 transition-transform duration-700">
+        {% else %}
+          <div class="text-neutral-300 flex flex-col items-center">
+            <svg class="w-20 h-20 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-xs">No Image Uploaded</span>
+          </div>
+        {% endif %}
+
+        {% if product.is_featured %}
+          <div class="absolute top-6 left-6">
+            <span class="bg-black text-white text-[10px] font-semibold tracking-wider uppercase px-3 py-1 rounded-full shadow-sm">
+              Flagship Model
+            </span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Key Assurance Badges -->
+      <div class="grid grid-cols-3 gap-3 text-center text-xs text-neutral-500 py-2">
+        <div class="p-3 bg-white rounded-xl border border-neutral-200/60">
+          <span class="font-semibold text-neutral-800 block text-xs mb-0.5">Free Shipping</span>
+          <span class="text-[11px]">Carbon-neutral packaging</span>
+        </div>
+        <div class="p-3 bg-white rounded-xl border border-neutral-200/60">
+          <span class="font-semibold text-neutral-800 block text-xs mb-0.5">2-Year Warranty</span>
+          <span class="text-[11px]">Direct factory support</span>
+        </div>
+        <div class="p-3 bg-white rounded-xl border border-neutral-200/60">
+          <span class="font-semibold text-neutral-800 block text-xs mb-0.5">14-Day Returns</span>
+          <span class="text-[11px]">No questions asked</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Product Detail & Specifications -->
+    <div class="lg:col-span-5 flex flex-col space-y-8">
+      <div>
+        <a href="{{ product.category.get_absolute_url }}" class="inline-block text-xs font-semibold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3 hover:bg-blue-100 transition-colors">
+          {{ product.category.name }}
+        </a>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-3 leading-tight">
+          {{ product.name }}
+        </h1>
+        <div class="flex items-baseline gap-3 mb-6">
+          <span class="text-3xl font-extrabold text-neutral-900">${{ product.price }}</span>
+          <span class="text-xs text-neutral-400 font-medium">Includes VAT and local import duties</span>
+        </div>
+        <div class="text-neutral-600 text-sm leading-relaxed whitespace-pre-line border-t border-b border-neutral-200/80 py-5">
+          {{ product.description }}
+        </div>
+      </div>
+
+      <!-- Retail Availability Notice -->
+      <div class="bg-neutral-50 rounded-2xl p-5 border border-neutral-200/80 flex items-start gap-3">
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 flex-shrink-0"></div>
+        <div class="text-xs">
+          <span class="font-semibold text-neutral-900 block mb-0.5">Available for Demonstration & Purchase</span>
+          <span class="text-neutral-500 leading-normal">
+            Ready to explore at authorized AURA flagship experience centers and premier audio-visual partners worldwide.
+          </span>
+        </div>
+      </div>
+
+      <!-- Extra Information & Specifications Accordion / Grid -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-neutral-900">
+          Technical Specifications & Details
+        </h3>
+
+        <div class="bg-white rounded-2xl border border-neutral-200/80 divide-y divide-neutral-100 text-xs">
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">Domain Category</span>
+            <span class="text-neutral-900 font-semibold">{{ product.category.name }}</span>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">Hardware Identifier</span>
+            <span class="font-mono text-neutral-700">AURA-{{ product.slug|upper|slice:":12" }}</span>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">Chassis Engineering</span>
+            <span class="text-neutral-900">100% Recycled Space-Grade Aluminum</span>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">What's in the Box</span>
+            <span class="text-neutral-900">Hardware unit, Braided USB-C Cable, Documentation</span>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">Release Catalog Date</span>
+            <span class="text-neutral-900">{{ product.created_at|date:"F Y" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back to Category Navigation -->
+      <div class="pt-2">
+        <a href="{{ product.category.get_absolute_url }}" class="btn-aura-secondary w-full text-center py-2.5 text-xs font-semibold">
+          ← Back to all {{ product.category.name }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Related Products in Category Section -->
+  {% if related_products %}
+    <div class="pt-16 pb-8">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <span class="text-xs uppercase tracking-wider text-neutral-400 font-semibold">Explore More</span>
+          <h2 class="text-2xl font-bold tracking-tight text-neutral-900">Related {{ product.category.name }}</h2>
+        </div>
+        <a href="{{ product.category.get_absolute_url }}" class="text-xs font-semibold text-blue-600 hover:underline">
+          View all →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for rel in related_products %}
+          <div class="aura-card bg-white rounded-2xl border border-neutral-200/80 p-5 flex flex-col justify-between group">
+            <div>
+              <a href="{{ rel.get_absolute_url }}" class="block w-full h-40 mb-4 overflow-hidden rounded-xl bg-[#fbfbfd] flex items-center justify-center p-2">
+                {% if rel.image %}
+                  <img src="{{ rel.image.url }}" alt="{{ rel.name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                  <span class="text-neutral-300 text-xs">No image</span>
+                {% endif %}
+              </a>
+              <h3 class="font-semibold text-sm text-neutral-900 group-hover:text-blue-600 transition-colors line-clamp-1 mb-1">
+                <a href="{{ rel.get_absolute_url }}">{{ rel.name }}</a>
+              </h3>
+            </div>
+            <div class="pt-3 border-t border-neutral-100 flex items-center justify-between mt-auto">
+              <span class="text-sm font-bold text-neutral-900">${{ rel.price }}</span>
+              <a href="{{ rel.get_absolute_url }}" class="text-xs text-blue-600 font-semibold hover:underline">
+                Explore
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

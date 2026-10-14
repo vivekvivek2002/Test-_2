@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Account Profile — AURA{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Header Banner -->
+  <div class="bg-white rounded-3xl border border-neutral-200/80 p-6 sm:p-10 mb-8 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-6">
+    <!-- Initials Avatar -->
+    <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-700 text-white font-bold text-2xl flex items-center justify-center shadow-md flex-shrink-0">
+      {{ user.first_name|first|default:user.username|first|upper }}{{ user.last_name|first|upper }}
+    </div>
+
+    <!-- User Header Info -->
+    <div class="flex-grow text-center sm:text-left">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">
+          {{ user.first_name }} {{ user.last_name }}
+        </h1>
+        <span class="inline-block text-xs font-mono font-medium bg-neutral-100 text-neutral-600 px-2.5 py-0.5 rounded-full self-center sm:self-auto">
+          @{{ user.username }}
+        </span>
+      </div>
+      <p class="text-xs text-neutral-500 mb-3">
+        Registered AURA Member • {{ user.email }}
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Active Account
+        </span>
+        {% if user.is_staff %}
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-50 text-purple-700 font-medium">
+            Staff / Admin Privileges
+          </span>
+        {% endif %}
+        <span class="text-neutral-400">
+          Joined {{ user.date_joined|date:"F j, Y" }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Sign Out Shortcut -->
+    <div class="flex-shrink-0">
+      <a href="{% url 'accounts:logout' %}" class="btn-aura-secondary !text-xs !py-2 !px-4 text-red-600 hover:text-red-700 hover:bg-red-50">
+        Sign Out
+      </a>
+    </div>
+  </div>
+
+  <!-- Profile Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Edit Personal Information Card -->
+    <div class="lg:col-span-8 bg-white rounded-3xl border border-neutral-200/80 p-6 sm:p-10 shadow-sm">
+      <div class="border-b border-neutral-200 pb-4 mb-6">
+        <h2 class="text-lg font-bold text-neutral-900">Personal Information</h2>
+        <p class="text-xs text-neutral-500 mt-0.5">Manage your legal name and contact email address.</p>
+      </div>
+
+      <form method="POST" action="{% url 'accounts:profile' %}" class="space-y-5" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="{{ form.first_name.id_for_label }}" class="block text-xs font-semibold text-neutral-700 mb-1">
+              First Name
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+              <p class="mt-1 text-xs text-red-600">{{ form.first_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label for="{{ form.last_name.id_for_label }}" class="block text-xs font-semibold text-neutral-700 mb-1">
+              Last Name
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+              <p class="mt-1 text-xs text-red-600">{{ form.last_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <label for="{{ form.email.id_for_label }}" class="block text-xs font-semibold text-neutral-700 mb-1">
+            Email Address
+          </label>
+          {{ form.email }}
+          {% if form.email.errors %}
+            <p class="mt-1 text-xs text-red-600">{{ form.email.errors.0 }}</p>
+          {% endif %}
+          <p class="text-[11px] text-neutral-400 mt-1">This email is used for account notifications and warranty verification.</p>
+        </div>
+
+        <div class="pt-4 flex items-center justify-end">
+          <button type="submit" class="btn-aura-primary !py-2.5 !px-6 !text-xs font-semibold">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Account Details Sidebar Card -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <!-- Security & Identifier Card -->
+      <div class="bg-white rounded-3xl border border-neutral-200/80 p-6 shadow-sm text-xs">
+        <h3 class="font-bold text-neutral-900 uppercase tracking-wider text-[11px] mb-4">
+          Account Identifiers
+        </h3>
+
+        <div class="space-y-3">
+          <div>
+            <span class="text-neutral-400 block text-[11px]">AURA Username</span>
+            <span class="font-semibold text-neutral-800 font-mono">{{ user.username }}</span>
+          </div>
+          <div class="pt-2 border-t border-neutral-100">
+            <span class="text-neutral-400 block text-[11px]">Primary Email</span>
+            <span class="font-semibold text-neutral-800">{{ user.email }}</span>
+          </div>
+          <div class="pt-2 border-t border-neutral-100">
+            <span class="text-neutral-400 block text-[11px]">Member Since</span>
+            <span class="text-neutral-800">{{ user.date_joined|date:"F j, Y, g:i A" }}</span>
+          </div>
+          <div class="pt-2 border-t border-neutral-100">
+            <span class="text-neutral-400 block text-[11px]">Last Session Active</span>
+            <span class="text-neutral-800">{{ user.last_login|default:"Current Session"|date:"F j, Y, g:i A" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Shortcuts -->
+      {% if user.is_staff %}
+        <div class="bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-3xl p-6 text-white text-xs shadow-md">
+          <h3 class="font-bold uppercase tracking-wider text-[11px] text-neutral-300 mb-2">Staff Control</h3>
+          <p class="text-neutral-400 leading-relaxed mb-4">You have administrator access to manage banners, products, and categories.</p>
+          <a href="/admin/" class="btn-aura-primary w-full text-center !bg-white !text-neutral-900 hover:!bg-neutral-100 !text-xs font-semibold">
+            Open Django Admin
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

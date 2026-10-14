@@ -1,0 +1,96 @@
+/* AURA - Apple Store-Style Minimalist Custom Stylesheet */
+
+:root {
+  --aura-bg: #fbfbfd;
+  --aura-surface: #ffffff;
+  --aura-text: #1d1d1f;
+  --aura-muted: #86868b;
+  --aura-accent: #0071e3;
+  --aura-border: #d2d2d7;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: var(--aura-bg);
+  color: var(--aura-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism navigation */
+.aura-nav-glass {
+  background-color: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Product Card Subtle Hover Transition */
+.aura-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aura-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.06), 0 10px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Banner Carousel Fade */
+.carousel-slide {
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Apple-style primary pill button */
+.btn-aura-primary {
+  background-color: #0071e3;
+  color: #ffffff;
+  border-radius: 980px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-aura-primary:hover {
+  background-color: #0077ed;
+  color: #ffffff;
+}
+
+.btn-aura-secondary {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #1d1d1f;
+  border-radius: 980px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-aura-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} — AURA Hardware Catalog{% endblock %}
+{% block meta_description %}Explore our collection of precision {{ category.name }} engineered by AURA.{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  
+  <!-- Breadcrumb Navigation -->
+  <nav class="flex items-center space-x-2 text-xs text-neutral-400 mb-8" aria-label="Breadcrumb">
+    <a href="{% url 'store:home' %}" class="hover:text-black transition-colors">Home</a>
+    <span>/</span>
+    <a href="{% url 'store:home' %}#categories" class="hover:text-black transition-colors">Categories</a>
+    <span>/</span>
+    <span class="text-neutral-900 font-semibold">{{ category.name }}</span>
+  </nav>
+
+  <!-- Category Header Hero -->
+  <div class="bg-white rounded-3xl border border-neutral-200/80 p-8 sm:p-12 mb-12 flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="max-w-xl">
+      <span class="text-xs uppercase tracking-[0.2em] text-blue-600 font-semibold mb-2 block">AURA Category</span>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-neutral-900 mb-4">
+        {{ category.name }}
+      </h1>
+      <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+        Every device in our {{ category.name }} collection is sculpted with premium alloy chassis, uncompromising thermal efficiency, and minimal acoustic signature.
+      </p>
+      <div class="inline-flex items-center gap-2 text-xs font-medium text-neutral-700 bg-neutral-100 px-3 py-1.5 rounded-full">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span>{{ products.count }} Model{{ products.count|pluralize }} In Active Portfolio</span>
+      </div>
+    </div>
+
+    <!-- Category Visual Hero Asset -->
+    {% if category.image %}
+      <div class="w-full md:w-72 h-48 md:h-56 bg-[#fbfbfd] rounded-2xl flex items-center justify-center p-4 border border-neutral-100">
+        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="max-h-full max-w-full object-contain">
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Product Grid -->
+  <div class="mb-10">
+    <div class="flex items-center justify-between border-b border-neutral-200 pb-4 mb-8">
+      <h2 class="text-xl font-bold text-neutral-900">Available Models</h2>
+      <span class="text-xs text-neutral-500">Showing {{ products.count }} item{{ products.count|pluralize }}</span>
+    </div>
+
+    {% if products %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for product in products %}
+          <div class="aura-card bg-white rounded-2xl border border-neutral-200/80 p-6 flex flex-col justify-between group">
+            <div>
+              <!-- Featured Pill -->
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+                  {{ category.name }}
+                </span>
+                {% if product.is_featured %}
+                  <span class="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
+                    Featured
+                  </span>
+                {% endif %}
+              </div>
+
+              <!-- Product Image -->
+              <a href="{{ product.get_absolute_url }}" class="block w-full h-56 mb-6 overflow-hidden rounded-xl bg-[#fbfbfd] flex items-center justify-center p-2">
+                {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                  <div class="text-neutral-400 text-xs flex flex-col items-center">
+                    <svg class="w-10 h-10 mb-1 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>No Preview Available</span>
+                  </div>
+                {% endif %}
+              </a>
+
+              <!-- Name & Description -->
+              <h3 class="font-bold text-xl text-neutral-900 group-hover:text-blue-600 transition-colors mb-2">
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+              </h3>
+              <p class="text-xs text-neutral-500 line-clamp-3 leading-relaxed mb-6">
+                {{ product.description }}
+              </p>
+            </div>
+
+            <!-- Price & Button -->
+            <div class="pt-4 border-t border-neutral-100 flex items-center justify-between mt-auto">
+              <div>
+                <span class="text-[11px] text-neutral-400 block font-normal">Priced from</span>
+                <span class="text-xl font-bold text-neutral-900">${{ product.price }}</span>
+              </div>
+              <a href="{{ product.get_absolute_url }}" class="btn-aura-primary">
+                View Specifications
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-20 bg-white rounded-3xl border border-neutral-200/80 p-8">
+        <svg class="w-12 h-12 mx-auto text-neutral-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+        <h3 class="text-base font-semibold text-neutral-800 mb-1">No products found in this category</h3>
+        <p class="text-xs text-neutral-500 mb-6">New models are being manufactured. Check back soon.</p>
+        <a href="{% url 'store:home' %}" class="btn-aura-secondary">Return to Overview</a>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
