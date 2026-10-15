@@ -1,8 +1,10 @@
 import os
 import io
+import secrets
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
+from django.conf import settings
 from store.models import Category, Product, Banner
 from PIL import Image, ImageDraw
 
@@ -39,29 +41,48 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.NOTICE("Initializing AURA database seeding..."))
 
-        # 1. Superuser
+        # 1. Superuser Password (secure in prod, predictable in debug dev)
+        env_admin_pass = os.getenv('DJANGO_SUPERUSER_PASSWORD')
+        if env_admin_pass:
+            admin_password = env_admin_pass
+            pass_source = "environment variable DJANGO_SUPERUSER_PASSWORD"
+        elif settings.DEBUG:
+            admin_password = "AdminPass123!"
+            pass_source = "local development default"
+        else:
+            admin_password = secrets.token_urlsafe(16)
+            pass_source = "cryptographically generated production secret"
+
         admin_user, created = User.objects.get_or_create(username="admin")
         admin_user.email = "admin@aurastore.com"
-        admin_user.set_password("AdminPass123!")
+        admin_user.set_password(admin_password)
         admin_user.first_name = "Super"
         admin_user.last_name = "Admin"
         admin_user.is_staff = True
         admin_user.is_superuser = True
         admin_user.is_active = True
         admin_user.save()
-        self.stdout.write(self.style.SUCCESS(f"{'Created' if created else 'Updated'} superuser: admin / AdminPass123!"))
+        self.stdout.write(self.style.SUCCESS(f"{'Created' if created else 'Updated'} superuser: admin (password source: {pass_source})"))
 
         # 2. Test Customer
+        env_customer_pass = os.getenv('DEMO_CUSTOMER_PASSWORD')
+        if env_customer_pass:
+            customer_password = env_customer_pass
+        elif settings.DEBUG:
+            customer_password = "CustomerPass123!"
+        else:
+            customer_password = secrets.token_urlsafe(16)
+
         customer_user, created = User.objects.get_or_create(username="customer")
         customer_user.email = "customer@aurastore.com"
-        customer_user.set_password("CustomerPass123!")
+        customer_user.set_password(customer_password)
         customer_user.first_name = "Alex"
         customer_user.last_name = "Morgan"
         customer_user.is_staff = False
         customer_user.is_superuser = False
         customer_user.is_active = True
         customer_user.save()
-        self.stdout.write(self.style.SUCCESS(f"{'Created' if created else 'Updated'} test customer: customer / CustomerPass123!"))
+        self.stdout.write(self.style.SUCCESS(f"{'Created' if created else 'Updated'} test customer: customer"))
 
         # 3. Categories
         categories_data = [
@@ -318,6 +339,7 @@ class Command(BaseCommand):
                 "category": "wearables",
                 "price": 99.00,
                 "is_featured": False,
+                "in_stock": False,  # Demonstration of backorder status & in-stock filter
                 "description": (
                     "A modern interpretation of a design developed in Milan at the end of the 19th century.\n\n"
                     "Woven on specialized Italian machines, the smooth stainless steel mesh wraps fluidly around your wrist."
@@ -338,6 +360,7 @@ class Command(BaseCommand):
                     "category": cat,
                     "is_active": True,
                     "is_featured": pdata["is_featured"],
+                    "in_stock": pdata.get("in_stock", True),
                 }
             )
             product.name = pdata["name"]
@@ -346,13 +369,15 @@ class Command(BaseCommand):
             product.category = cat
             product.is_active = True
             product.is_featured = pdata["is_featured"]
+            product.in_stock = pdata.get("in_stock", True)
             if not product.image:
                 img_file = create_sample_image(800, 800, pdata["bg"], pdata["name"], pdata["accent"])
                 product.image.save(f"{pdata['slug']}.jpg", img_file, save=False)
             product.save()
-            self.stdout.write(f"Product: {product.name} (${product.price})")
+            stock_label = "In Stock" if product.in_stock else "Backordered"
+            self.stdout.write(f"Product: {product.name} (${product.price}) [{stock_label}]")
 
         self.stdout.write(self.style.SUCCESS("\nSuccessfully seeded all sample categories, products, banners, and users!"))
         self.stdout.write(self.style.SUCCESS("Credentials for testing:"))
-        self.stdout.write(self.style.SUCCESS("  - Superuser:  admin / AdminPass123!"))
-        self.stdout.write(self.style.SUCCESS("  - Customer:   customer / CustomerPass123!"))
+        self.stdout.write(self.style.SUCCESS(f"  - Superuser:  admin / {admin_password}"))
+        self.stdout.write(self.style.SUCCESS(f"  - Customer:   customer / {customer_password}"))

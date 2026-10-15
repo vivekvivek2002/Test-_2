@@ -39,10 +39,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('image_preview', 'name', 'category', 'price', 'is_featured', 'is_active', 'created_at')
+    list_display = ('image_preview', 'name', 'category', 'price', 'in_stock', 'is_featured', 'is_active', 'created_at')
     list_display_links = ('image_preview', 'name')
-    list_editable = ('is_active', 'is_featured')
-    list_filter = ('is_active', 'is_featured', 'category', 'created_at')
+    list_editable = ('is_active', 'is_featured', 'in_stock')
+    list_filter = ('is_active', 'is_featured', 'in_stock', 'category', 'created_at')
     search_fields = ('name', 'slug', 'description')
     prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ('image_preview_large', 'created_at')
@@ -54,7 +54,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('image', 'image_preview_large')
         }),
         ('Visibility & Promotion', {
-            'fields': ('is_active', 'is_featured')
+            'fields': ('is_active', 'is_featured', 'in_stock')
         }),
         ('Metadata', {
             'fields': ('created_at',),

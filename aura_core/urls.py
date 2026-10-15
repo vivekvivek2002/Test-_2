@@ -16,3 +16,7 @@ if settings.DEBUG:
 admin.site.site_header = 'AURA Administration'
 admin.site.site_title = 'AURA Admin Portal'
 admin.site.index_title = 'Store Management & Catalog Control'
+
+# Custom Error Handlers
+handler404 = 'store.views.custom_404'
+handler500 = 'store.views.custom_500'

@@ -77,13 +77,23 @@
 
       <!-- Retail Availability Notice -->
       <div class="bg-neutral-50 rounded-2xl p-5 border border-neutral-200/80 flex items-start gap-3">
-        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 flex-shrink-0"></div>
-        <div class="text-xs">
-          <span class="font-semibold text-neutral-900 block mb-0.5">Available for Demonstration & Purchase</span>
-          <span class="text-neutral-500 leading-normal">
-            Ready to explore at authorized AURA flagship experience centers and premier audio-visual partners worldwide.
-          </span>
-        </div>
+        {% if product.in_stock %}
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 flex-shrink-0 animate-pulse"></div>
+          <div class="text-xs">
+            <span class="font-semibold text-neutral-900 block mb-0.5">In Stock — Ready for Demonstration & Dispatch</span>
+            <span class="text-neutral-500 leading-normal">
+              Available at authorized AURA flagship experience centers and eligible for complimentary express delivery.
+            </span>
+          </div>
+        {% else %}
+          <div class="w-2.5 h-2.5 rounded-full bg-amber-500 mt-1 flex-shrink-0"></div>
+          <div class="text-xs">
+            <span class="font-semibold text-neutral-900 block mb-0.5">Allocation In Progress — Temporary Backorder</span>
+            <span class="text-neutral-500 leading-normal">
+              Currently manufactured in limited batches. Next allocation batch arriving at flagship centers soon.
+            </span>
+          </div>
+        {% endif %}
       </div>
 
       <!-- Extra Information & Specifications Accordion / Grid -->
@@ -96,6 +106,18 @@
           <div class="p-4 flex justify-between items-center">
             <span class="text-neutral-400 font-medium">Domain Category</span>
             <span class="text-neutral-900 font-semibold">{{ product.category.name }}</span>
+          </div>
+          <div class="p-4 flex justify-between items-center">
+            <span class="text-neutral-400 font-medium">Availability Status</span>
+            {% if product.in_stock %}
+              <span class="inline-flex items-center gap-1 font-semibold text-emerald-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> In Stock
+              </span>
+            {% else %}
+              <span class="inline-flex items-center gap-1 font-semibold text-amber-600">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Backordered
+              </span>
+            {% endif %}
           </div>
           <div class="p-4 flex justify-between items-center">
             <span class="text-neutral-400 font-medium">Hardware Identifier</span>

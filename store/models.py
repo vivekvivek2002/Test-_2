@@ -30,6 +30,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     is_active = models.BooleanField(default=True, help_text="Controls if this product is publicly visible.")
     is_featured = models.BooleanField(default=False, help_text="Feature this product on the homepage.")
+    in_stock = models.BooleanField(default=True, help_text="Availability status: In stock or out of stock.")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
