@@ -6,6 +6,22 @@ A production-ready full-stack Django e-commerce platform inspired by the Apple S
 
 ---
 
+## Technical Assignment Submission Summary
+
+| # | Submission Item | Details |
+|---|---|---|
+| **1** | **Live Demo URL** | `https://aura-store.onrender.com` *(Replace with your live Render URL upon deployment)* |
+| **2** | **Admin Panel URL** | `https://aura-store.onrender.com/admin/` *(Local: `http://127.0.0.1:8000/admin/`)* |
+| **3** | **Admin Credentials** | Username: `admin` \| Password: `AdminPass123!` |
+| **4** | **Test User Credentials** | Username: `customer` \| Password: `CustomerPass123!` |
+| **5** | **GitHub Repository** | `https://github.com/<your-username>/aura-store` *(Push local repo to GitHub)* |
+| **6** | **Technologies Used** | Python 3, Django 4.2 LTS, Django Admin, Django Auth, Tailwind CSS, Gunicorn, WhiteNoise, Pillow |
+| **7** | **Database Used** | SQLite (Local Development) / PostgreSQL (Production via `dj-database-url`) |
+| **8** | **Major Features** | Database-driven homepage & hero carousel, category listing, product detail with specs, user auth (register/login/logout), protected profile edit, customized admin with image previews & `is_active` toggling |
+| **9** | **Third-Party Libraries** | `dj-database-url`, `psycopg2-binary`, `Pillow`, `whitenoise`, `gunicorn`, `python-dotenv`, `django-cloudinary-storage`, `cloudinary` |
+
+---
+
 ## 1. Technologies & Architecture
 
 - **Backend Framework**: Python 3.9+ & Django 4.2 LTS
